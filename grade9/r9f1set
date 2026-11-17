@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بازی تعاملی مجموعه‌ها | ریاضی نهم</title>
+<style>
+:root{--purple:#6941a5;--deep:#43236e;--lav:#f2ebff;--pink:#fce7f3;--mint:#dcfce7;--gold:#fef3c7;--ink:#29213a}
+*{box-sizing:border-box}
+body{margin:0;padding:10px;font-family:Tahoma,"Segoe UI",sans-serif;background:linear-gradient(135deg,#f5edff,#e8f5ff);color:var(--ink);direction:rtl}
+.app{max-width:900px;margin:auto;background:#fff;border-radius:20px;padding:clamp(12px,2vw,22px);box-shadow:0 12px 35px #4b26701c;border:1px solid #e7dcf8}
+header{text-align:center}
+h1{margin:0 0 4px;color:var(--deep);font-size:clamp(1.15rem,3vw,1.65rem)}
+.subtitle{color:#6b5a80;line-height:1.55;font-size:.82rem;margin:0 auto 7px}
+.pills{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:7px 0 10px}
+.pill{background:var(--lav);color:var(--deep);padding:5px 9px;border-radius:30px;font-size:.76rem}
+.toolbar{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:8px;font-size:.85rem}
+select,button{font:inherit}
+select{padding:7px;border:1px solid #d8c9ef;border-radius:10px;background:white;color:var(--ink);font-size:.82rem}
+.progress-wrap{height:6px;background:#eee7f7;border-radius:20px;overflow:hidden;margin:8px 0}
+#progress{height:100%;width:0;background:linear-gradient(90deg,#9b5de5,#5a4fcf);transition:width .25s}
+.question{background:linear-gradient(120deg,#f7f1ff,#fff7fb);border:1px solid #e7d9fa;border-radius:15px;padding:10px;text-align:center}
+.level{font-size:.72rem;color:#75549b;font-weight:bold;margin-bottom:3px}
+#prompt{font-size:clamp(.95rem,2.5vw,1.2rem);font-weight:bold;line-height:1.55;color:#3f2368}
+#translation{font-size:.78rem;color:#695b78;line-height:1.5}
+.canvas-wrap{max-width:620px;margin:9px auto 5px}
+canvas{display:block;width:100%;height:auto;touch-action:manipulation;border:2px solid #e0d3f0;border-radius:18px;background:#fff}
+.help{text-align:center;font-size:.75rem;color:#766886;line-height:1.55}
+.actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:9px}
+button{border:0;border-radius:11px;padding:9px 13px;cursor:pointer;font-weight:bold;font-size:.82rem;transition:transform .15s,opacity .15s}
+button:hover{transform:translateY(-1px)}
+button:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.primary{background:var(--purple);color:white;box-shadow:0 4px 10px #6941a533}
+.secondary{background:#f0e8fb;color:var(--deep)}
+.success{background:#e8faef;color:#166534}
+#feedback{min-height:42px;margin-top:8px;padding:7px;border-radius:11px;text-align:center;line-height:1.6;font-size:.82rem;font-weight:bold}
+#feedback.good{background:#e8faef;color:#166534}
+#feedback.bad{background:#fff0f0;color:#a12b36}
+#feedback.neutral{background:#f6f3fa;color:#685777}
+.scorebar{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:12px 0}
+.scorebox{padding:8px 14px;border-radius:12px;background:#f8f5fc;color:#563b7a}
+footer{text-align:center;border-top:1px solid #eee4f7;margin-top:10px;padding-top:7px;color:#76558e;line-height:1.4;font-size:.62rem}
+footer strong{color:#56317f;font-size:.64rem}
+@media(max-width:520px){body{padding:8px}.app{padding:13px;border-radius:18px}.toolbar{justify-content:center}.question{padding:12px}button{padding:10px 13px}}
+
+.celebration-overlay{position:fixed;inset:0;pointer-events:none;z-index:2147483647;overflow:hidden;display:none;contain:strict}
+.celebration-overlay.show{display:block}
+.confetti-piece{position:absolute;top:-18px;width:9px;height:15px;opacity:.95;animation:confetti-fall linear forwards}
+@keyframes confetti-fall{to{transform:translateY(110vh) rotate(900deg);opacity:.15}}
+.star-piece{position:absolute;top:-36px;color:#facc15;text-shadow:0 0 5px #f59e0b,0 0 12px #fde68a;font-size:clamp(18px,3vw,32px);line-height:1;animation:star-fall linear forwards;filter:drop-shadow(0 2px 3px #7c3aed55)}
+@keyframes star-fall{0%{transform:translateY(-5vh) rotate(0deg) scale(.5);opacity:0}12%{opacity:1}85%{opacity:1}100%{transform:translateY(110vh) rotate(540deg) scale(1.15);opacity:0}}
+@media(prefers-reduced-motion:reduce){.confetti-piece{animation-duration:1.8s!important}}
+</style>
+</head>
+<body>
+<div id="celebrationOverlay" class="celebration-overlay" aria-hidden="true"></div>\n<main class="app">
+<header>
+<h1>🎯 مأموریت مجموعه‌ها</h1>
+<p class="subtitle">بازی تعاملی ریاضی نهم برای تمرین اجتماع، اشتراک و تفاضل مجموعه‌ها<br>ناحیه‌های نمودار ون را انتخاب کن و پاسخ خودت را بررسی کن.</p>
+<div class="pills"><span class="pill">🟣 ۲۴ پرسش</span><span class="pill">🌱 سطح پایه تا پیشرفته</span><span class="pill">🏆 امتیاز و راهنمایی</span></div>
+</header>
+
+<div class="toolbar">
+<label>انتخاب سطح:
+<select id="levelSelect">
+<option value="all">همه پرسش‌ها</option><option value="basic">سطح پایه</option><option value="medium">سطح متوسط</option><option value="hard">سطح پیشرفته</option>
+</select></label>
+<div class="scorebar" style="margin:0"><span class="scorebox">امتیاز: <b id="score">۰</b></span><span class="scorebox">درست: <b id="correct">۰</b></span></div>
+</div>
+<div class="progress-wrap"><div id="progress"></div></div>
+<div class="question">
+<div class="level" id="levelLabel">سطح پایه</div>
+<div id="prompt">ناحیهٔ A را انتخاب کن.</div>
+<div id="translation">روی هر بخش از نمودار کلیک کن تا رنگی شود.</div>
+</div>
+<div class="canvas-wrap"><canvas id="venn" width="600" height="440" aria-label="نمودار ون سه مجموعه"></canvas></div>
+<div class="help">راهنما: برای انتخاب یا برداشتن انتخاب، روی ناحیهٔ داخل دایره‌ها بزن. بیرون دایره‌ها جزو این بازی نیست.</div>
+<div class="actions">
+<button class="secondary" id="clear">پاک کردن انتخاب‌ها</button>
+<button class="secondary" id="hint">💡 راهنمایی</button>
+<button class="primary" id="check">بررسی پاسخ</button>
+<button class="primary" id="next">پرسش بعدی ←</button>
+</div>
+<div id="feedback" class="neutral" aria-live="polite">آماده‌ای؟ ناحیه‌های موردنظر را انتخاب کن.</div>
+<footer><strong>طراح: فاطمه جاهد، خراسان جنوبی</strong><br>ریاضی پایه نهم | یادگیری با بازی 🌷</footer>
+</main>
+<script>
+(function(){
+const canvas=document.getElementById('venn'),ctx=canvas.getContext('2d');
+const promptEl=document.getElementById('prompt'),translationEl=document.getElementById('translation');
+const feedback=document.getElementById('feedback'),levelLabel=document.getElementById('levelLabel');
+const scoreEl=document.getElementById('score'),correctEl=document.getElementById('correct'),progress=document.getElementById('progress');
+const A={x:235,y:250},B={x:365,y:250},C={x:300,y:155},r=125;
+const regions=[
+ {name:'فقط A',x:190,y:265,bit:1},{name:'فقط B',x:410,y:265,bit:2},
+ {name:'A و B، بدون C',x:300,y:305,bit:3},{name:'فقط C',x:300,y:95,bit:4},
+ {name:'A و C، بدون B',x:240,y:195,bit:5},{name:'B و C، بدون A',x:360,y:195,bit:6},
+ {name:'اشتراک هر سه',x:300,y:235,bit:7}
+];
+// target indices: 0=A only, 1=B only, 2=AB only, 3=C only, 4=AC only, 5=BC only, 6=ABC
+const questions=[
+{l:'basic',e:'A',t:[0,2,4,6],why:'مجموعهٔ A شامل تمام بخش‌هایی است که داخل دایرهٔ A قرار دارند.'},
+{l:'basic',e:'B',t:[1,2,5,6],why:'مجموعهٔ B شامل تمام بخش‌های داخل دایرهٔ B است.'},
+{l:'basic',e:'A ∪ B',t:[0,1,2,4,5,6],why:'اجتماع یعنی هر بخشی که دست‌کم در یکی از دو مجموعه باشد.'},
+{l:'basic',e:'A ∩ B',t:[2,6],why:'اشتراک A و B بخش‌هایی است که هم‌زمان در هر دو مجموعه‌اند.'},
+{l:'basic',e:'A − B',t:[0,4],why:'در A − B بخش‌های A را نگه می‌داریم که داخل B نیستند.'},
+{l:'basic',e:'B − A',t:[1,5],why:'در B − A بخش‌های B را نگه می‌داریم که داخل A نیستند.'},
+{l:'basic',e:'C',t:[3,4,5,6],why:'همهٔ بخش‌های داخل دایرهٔ C را انتخاب کن.'},
+{l:'basic',e:'A ∩ C',t:[4,6],why:'فقط بخش مشترک دو دایرهٔ A و C را انتخاب کن.'},
+{l:'medium',e:'(A ∪ B) − C',t:[0,1,2],why:'ابتدا همهٔ A و B را در نظر بگیر، سپس هر بخش داخل C را حذف کن.'},
+{l:'medium',e:'(A ∩ B) − C',t:[2],why:'اشتراک A و B را بگیر، اما بخش داخل C را کنار بگذار.'},
+{l:'medium',e:'A ∩ (B ∪ C)',t:[2,4,6],why:'از بخش‌های A، آن‌هایی را انتخاب کن که در B یا C نیز هستند.'},
+{l:'medium',e:'(A − B) ∪ (B − A)',t:[0,1,4,5],why:'بخش‌های متعلق به یکی از A و B را بگیر، نه بخش مشترک آن دو.'},
+{l:'medium',e:'(A ∪ C) − B',t:[0,3,4],why:'اجتماع A و C را تشکیل بده و تمام بخش‌های داخل B را حذف کن.'},
+{l:'medium',e:'C ∩ (A ∪ B)',t:[4,5,6],why:'بخش‌های داخل C را انتخاب کن که در A یا B هم قرار دارند.'},
+{l:'medium',e:'(B ∩ C) − A',t:[5],why:'از اشتراک B و C، بخش مشترک با A را حذف کن.'},
+{l:'medium',e:'(A ∪ B ∪ C) − (A ∩ B ∩ C)',t:[0,1,2,3,4,5],why:'تمام بخش‌های داخل دست‌کم یک مجموعه را بگیر، به‌جز اشتراک هر سه.'},
+{l:'hard',e:'A − (B ∪ C)',t:[0],why:'بخش‌هایی از A را پیدا کن که نه در B هستند و نه در C.'},
+{l:'hard',e:'A ∩ (B − C)',t:[2],why:'اول B − C را مشخص کن؛ سپس فقط بخش‌های آن را که در A هم هستند نگه دار.'},
+{l:'hard',e:'(A ∩ C) ∪ (B − A)',t:[1,4,5,6],why:'بخش مشترک A و C را با بخش‌های B خارج از A اجتماع کن.'},
+{l:'hard',e:'(A ∪ B) − (A ∩ B)',t:[0,1,4,5],why:'بخش‌های A یا B را انتخاب کن، ولی همهٔ اشتراک A و B را حذف کن.'},
+{l:'hard',e:'(A − C) ∩ B',t:[2],why:'از B، بخش‌هایی را بگیر که در A هستند اما در C نیستند؛ این عبارت فقط بخش AB خارج از C را می‌دهد.'},
+{l:'hard',e:'(A ∪ C) ∩ (B ∪ C)',t:[2,3,4,5,6],why:'با استفاده از خاصیت توزیع، عبارت برابر C ∪ (A ∩ B) است؛ پس تمام ناحیه‌های C و نیز بخش A و B خارج از C انتخاب می‌شوند.'},
+{l:'hard',e:'(A ∩ B) ∪ (A ∩ C) − (A ∩ B ∩ C)',t:[2,4],why:'اشتراک‌های دوتایی A با B و A با C را بگیر و اشتراک هر سه را حذف کن.'},
+{l:'hard',e:'(A ∪ B ∪ C) − [(A − B) ∪ (B − C)]',t:[3,5,6],why:'از اجتماع هر سه، بخش‌های A خارج از B (فقط A و بخش AC خارج از B) و بخش‌های B خارج از C (فقط B و بخش AB خارج از C) حذف می‌شوند؛ پس فقط بخش C، بخش BC خارج از A و اشتراک هر سه باقی می‌مانند.'}
+];
+const levelNames={basic:'سطح پایه 🌱',medium:'سطح متوسط 🚀',hard:'سطح پیشرفته 🧠'};
+let filtered=questions.map((q,i)=>({...q,original:i})),index=0,selected=new Set(),score=0,correct=0,attempted=new Set();
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+function selectedQuestion(){return filtered[index]}
+function resetFeedback(text=''){feedback.className='neutral';feedback.textContent=text}
+function draw(){
+ const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+ // paint each pixel by membership mask so all seven regions can be clicked precisely
+ const im=ctx.createImageData(w,h),d=im.data;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const a=(x-A.x)**2+(y-A.y)**2<r*r,b=(x-B.x)**2+(y-B.y)**2<r*r,c=(x-C.x)**2+(y-C.y)**2<r*r;
+  let bit=(a?1:0)|(b?2:0)|(c?4:0);let ri=({1:0,2:1,3:2,4:3,5:4,6:5,7:6})[bit];
+  if(ri!==undefined&&selected.has(ri)){let p=(y*w+x)*4;d[p]=164;d[p+1]=111;d[p+2]=226;d[p+3]=210;}
+ }
+ ctx.putImageData(im,0,0);
+ ctx.lineWidth=3;ctx.strokeStyle='#56347c';
+ [A,B,C].forEach(o=>{ctx.beginPath();ctx.arc(o.x,o.y,r,0,Math.PI*2);ctx.stroke()});
+ ctx.fillStyle='#382052';ctx.font='bold 27px Tahoma';ctx.textAlign='center';ctx.textBaseline='middle';
+ ctx.fillText('A',A.x-85,A.y+10);ctx.fillText('B',B.x+85,B.y+10);ctx.fillText('C',C.x,C.y-85);
+}
+function render(){
+ const q=selectedQuestion();if(!q)return;
+ selected.clear();
+ // Keep mathematical expressions in left-to-right order inside the Persian RTL page.
+ promptEl.innerHTML='ناحیه‌های عبارت <bdi dir="ltr" style="unicode-bidi:isolate;display:inline-block">('+q.e+')</bdi> را رنگ کن.';
+ translationEl.textContent='برای پاسخ، همه و فقط بخش‌های درست را انتخاب کن.';
+ levelLabel.textContent=levelNames[q.l];document.getElementById('next').textContent=index===filtered.length-1?'پایان بازی 🏁':'پرسش بعدی ←';
+ document.getElementById('prev');
+ document.querySelector('.progress-wrap').setAttribute('aria-label','پیشرفت');
+ progress.style.width=((index+1)/filtered.length*100)+'%';
+ document.querySelector('.pills .pill').textContent='🟣 '+filtered.length+' پرسش';
+ resetFeedback('پرسش '+fa(index+1)+' از '+fa(filtered.length)+' — ناحیه‌ها را انتخاب کن.');
+ draw();
+}
+
+let applauseContext=null;
+function celebrate(){
+ const overlay=document.getElementById('celebrationOverlay');
+ if(!overlay)return;
+ overlay.innerHTML='';
+ overlay.classList.add('show');
+ const colors=['#7c3aed','#ec4899','#f59e0b','#10b981','#3b82f6','#ef4444','#eab308','#fb7185'];
+ // رنگ‌باران
+ for(let i=0;i<170;i++){
+  const piece=document.createElement('span');
+  piece.className='confetti-piece';
+  piece.style.left=(Math.random()*100)+'%';
+  piece.style.top=(-10-Math.random()*100)+'px';
+  piece.style.width=(6+Math.random()*7)+'px';
+  piece.style.height=(9+Math.random()*12)+'px';
+  piece.style.borderRadius=Math.random()>.5?'50%':'2px';
+  piece.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+  piece.style.animationDuration=(2.8+Math.random()*2.2)+'s';
+  piece.style.animationDelay=(Math.random()*.25)+'s';
+  overlay.appendChild(piece);
+ }
+ // ستاره‌باران
+ for(let i=0;i<55;i++){
+  const star=document.createElement('span');
+  star.className='star-piece';
+  star.textContent=['★','⭐','✦','✧'][Math.floor(Math.random()*4)];
+  star.style.left=(Math.random()*100)+'%';
+  star.style.animationDuration=(3+Math.random()*2.3)+'s';
+  star.style.animationDelay=(Math.random()*.7)+'s';
+  star.style.fontSize=(18+Math.random()*20)+'px';
+  overlay.appendChild(star);
+ }
+ if(window._confettiTimer)clearTimeout(window._confettiTimer);
+ window._confettiTimer=setTimeout(()=>{overlay.classList.remove('show');overlay.innerHTML=''},5900);
+ playApplause();
+}
+function playApplause(){
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return;
+  if(!applauseContext)applauseContext=new AC();
+  const ac=applauseContext;
+  const run=()=>{
+   const now=ac.currentTime;
+   for(let i=0;i<22;i++){
+    const duration=0.055+Math.random()*0.075;
+    const buffer=ac.createBuffer(1,Math.ceil(ac.sampleRate*duration),ac.sampleRate);
+    const data=buffer.getChannelData(0);
+    for(let j=0;j<data.length;j++)data[j]=(Math.random()*2-1)*Math.pow(1-j/data.length,2);
+    const source=ac.createBufferSource();source.buffer=buffer;
+    const filter=ac.createBiquadFilter();filter.type='bandpass';filter.frequency.value=900+Math.random()*1900;filter.Q.value=.7;
+    const gain=ac.createGain(),t=now+i*(.075+Math.random()*.045);
+    gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.35,t+.008);gain.gain.exponentialRampToValueAtTime(.0001,t+duration);
+    source.connect(filter);filter.connect(gain);gain.connect(ac.destination);source.start(t);source.stop(t+duration);
+   }
+   for(let i=0;i<5;i++){
+    const osc=ac.createOscillator(),gain=ac.createGain(),t=now+i*.19;
+    osc.type='triangle';osc.frequency.setValueAtTime(500+i*115,t);
+    gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.07,t+.025);gain.gain.exponentialRampToValueAtTime(.0001,t+.17);
+    osc.connect(gain);gain.connect(ac.destination);osc.start(t);osc.stop(t+.18);
+   }
+  };
+  if(ac.state==='suspended')ac.resume().then(run).catch(()=>{});else run();
+ }catch(e){}
+}
+document.addEventListener('pointerdown',()=>{
+ try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){if(!applauseContext)applauseContext=new AC();if(applauseContext.state==='suspended')applauseContext.resume()}}catch(e){}
+},{once:true});
+
+function check(){
+ const q=selectedQuestion();if(!q)return;
+ const target=new Set(q.t),ok=target.size===selected.size&&[...target].every(v=>selected.has(v));
+ if(ok){feedback.className='good';feedback.textContent='آفرین! پاسخ درست است. 🎉 '+q.why;
+ celebrate();if(!attempted.has(q.original)){score+=10;correct++;attempted.add(q.original);scoreEl.textContent=fa(score);correctEl.textContent=fa(correct)}}
+ else{feedback.className='bad';feedback.textContent='هنوز درست نیست؛ به ناحیه‌های مشترک و بخش‌های خارج از مجموعه‌ها دقت کن. دوباره تلاش کن!'}
+}
+canvas.addEventListener('click',e=>{
+ const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left)*canvas.width/rect.width,y=(e.clientY-rect.top)*canvas.height/rect.height;
+ const a=(x-A.x)**2+(y-A.y)**2<r*r,b=(x-B.x)**2+(y-B.y)**2<r*r,c=(x-C.x)**2+(y-C.y)**2<r*r;
+ const bit=(a?1:0)|(b?2:0)|(c?4:0),ri=({1:0,2:1,3:2,4:3,5:4,6:5,7:6})[bit];
+ if(ri!==undefined){selected.has(ri)?selected.delete(ri):selected.add(ri);draw();resetFeedback('انتخاب ثبت شد؛ وقتی آماده‌ای «بررسی پاسخ» را بزن.')}
+});
+document.getElementById('check').addEventListener('click',check);
+document.getElementById('clear').addEventListener('click',()=>{selected.clear();draw();resetFeedback('انتخاب‌ها پاک شد. دوباره تلاش کن.')});
+document.getElementById('hint').addEventListener('click',()=>{const q=selectedQuestion();feedback.className='neutral';feedback.textContent='💡 راهنمایی: '+q.why});
+document.getElementById('next').addEventListener('click',()=>{
+ if(index<filtered.length-1){index++;render()}else{feedback.className='good';feedback.textContent='🏆 بازی این سطح تمام شد! امتیاز شما: '+fa(score)+' از '+fa(filtered.length*10)+' — برای تمرین دوباره، سطح دیگری انتخاب کن.'}
+});
+document.getElementById('levelSelect').addEventListener('change',e=>{
+ const v=e.target.value;filtered=questions.map((q,i)=>({...q,original:i})).filter(q=>v==='all'||q.l===v);index=0;attempted.clear();score=0;correct=0;scoreEl.textContent='۰';correctEl.textContent='۰';render();
+});
+render();
+})();
+</script>
+</body>
+</html>
